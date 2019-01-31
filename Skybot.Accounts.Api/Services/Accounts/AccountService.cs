@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Skybot.Accounts.Api.Data;
 using Skybot.Accounts.Api.Models;
 
@@ -14,6 +15,11 @@ namespace Skybot.Accounts.Api.Services.Accounts
         }
 
         public Task<UserAccount> GetAccountByPhoneNumber(string phoneNumber)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<UserAccount> GeyById(Guid id)
         {
             throw new System.NotImplementedException();
         }

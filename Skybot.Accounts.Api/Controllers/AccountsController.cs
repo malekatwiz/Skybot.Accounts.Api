@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,24 +38,52 @@ namespace Skybot.Accounts.Api.Controllers
         }
 
         [Route("create")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [HttpPut]
-        public async Task<IActionResult> Create([FromBody] UserAccountModel model)
+        public async Task<IActionResult> Create([FromBody]UserAccountModel model)
         {
             if (ModelIsValid(model))
             {
                 var account = await _accountService.NewAccount(model);
 
-                if (string.IsNullOrEmpty(account?.Id))
+                if (account != null && !account.Id.Equals(Guid.Empty))
                 {
-                    return new ObjectResult(account)
-                    {
-                        StatusCode = (int)HttpStatusCode.InternalServerError
-                    };
+                    //TODO: Change Uri
+                    return new CreatedResult(new Uri($"https://accounts.skybot.io/api/accounts/{account.Id}"), account);
                 }
-
-                return Ok(account);
             }
             return BadRequest();
+        }
+
+        [Route("account/{phoneNumber}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [HttpGet]
+        public async Task<IActionResult> GetByPhoneNumber(string phoneNumber)
+        {
+            var account = await _accountService.GetAccountByPhoneNumber(phoneNumber);
+
+            if (account != null)
+            {
+                return Ok(account);
+            }
+            return NotFound();
+        }
+
+        [Route("account/{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [HttpGet]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var account = await _accountService.GeyById(id);
+
+            if (account != null)
+            {
+                return Ok(account);
+            }
+
+            return NotFound();
         }
 
         private static bool ModelIsValid(UserAccountModel model)

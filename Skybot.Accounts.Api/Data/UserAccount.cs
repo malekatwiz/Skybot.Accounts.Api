@@ -1,9 +1,11 @@
-﻿using Microsoft.Azure.Documents;
+﻿using System;
+using Microsoft.Azure.Documents;
 
 namespace Skybot.Accounts.Api.Data
 {
-    public class UserAccount : Resource
+    public class UserAccount
     {
+        public Guid Id { get; set; }
         public string PhoneNumber { get; set; }
     }
 }

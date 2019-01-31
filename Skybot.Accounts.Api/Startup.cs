@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Skybot.Accounts.Api.Data;
+using Skybot.Accounts.Api.Services.Accounts;
 using Skybot.Accounts.Api.Settings;
 
 namespace Skybot.Accounts.Api
@@ -23,6 +24,7 @@ namespace Skybot.Accounts.Api
             services.AddTransient<ISettings, Settings.Settings>();
             services.AddTransient<IRepository, RepositoryBase>();
             services.AddTransient<IAccountsRepository, AccountsRepository>();
+            services.AddTransient<IAccountService, AccountService>();
 
             services.AddAuthentication("Bearer").AddIdentityServerAuthentication(options =>
             {

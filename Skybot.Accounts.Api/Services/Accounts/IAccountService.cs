@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Skybot.Accounts.Api.Data;
 using Skybot.Accounts.Api.Models;
 
@@ -8,5 +9,6 @@ namespace Skybot.Accounts.Api.Services.Accounts
     {
         Task<UserAccount> NewAccount(UserAccountModel model);
         Task<UserAccount> GetAccountByPhoneNumber(string phoneNumber);
+        Task<UserAccount> GeyById(Guid id);
     }
 }
