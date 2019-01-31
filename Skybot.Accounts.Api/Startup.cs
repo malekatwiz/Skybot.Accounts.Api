@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Skybot.Accounts.Api.Data;
+using Skybot.Accounts.Api.Settings;
 
 namespace Skybot.Accounts.Api
 {
@@ -19,13 +20,25 @@ namespace Skybot.Accounts.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<ISettings, Settings.Settings>();
+            services.AddTransient<IRepository, RepositoryBase>();
             services.AddTransient<IAccountsRepository, AccountsRepository>();
+
+            services.AddAuthentication("Bearer").AddIdentityServerAuthentication(options =>
+            {
+                options.Authority = Configuration["Authority"];
+                options.ApiName = "Skybot.Api";
+                options.RequireHttpsMetadata = false;
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
