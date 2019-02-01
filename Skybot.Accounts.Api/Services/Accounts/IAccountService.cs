@@ -7,8 +7,8 @@ namespace Skybot.Accounts.Api.Services.Accounts
 {
     public interface IAccountService
     {
-        Task<UserAccount> NewAccount(UserAccountModel model);
-        Task<UserAccount> GetAccountByPhoneNumber(string phoneNumber);
-        Task<UserAccount> GeyById(Guid id);
+        Task<UserAccount> New(UserAccountModel model);
+        UserAccount GetByPhoneNumber(string phoneNumber);
+        Task<UserAccount> Gey(Guid id);
     }
 }

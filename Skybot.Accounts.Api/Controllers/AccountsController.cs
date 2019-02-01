@@ -26,11 +26,11 @@ namespace Skybot.Accounts.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpPost]
-        public async Task<IActionResult> CheckAccount([FromBody]UserAccountModel model)
+        public IActionResult CheckAccount([FromBody]UserAccountModel model)
         {
             if (ModelIsValid(model))
             {
-                var account = await _accountService.GetAccountByPhoneNumber(model.PhoneNumber);
+                var account = _accountService.GetByPhoneNumber(model.PhoneNumber);
 
                 return account == null ? (IActionResult)NotFound() : Ok();
             }
@@ -45,7 +45,7 @@ namespace Skybot.Accounts.Api.Controllers
         {
             if (ModelIsValid(model))
             {
-                var account = await _accountService.NewAccount(model);
+                var account = await _accountService.New(model);
 
                 if (account != null && !account.Id.Equals(Guid.Empty))
                 {
@@ -60,9 +60,9 @@ namespace Skybot.Accounts.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet]
-        public async Task<IActionResult> GetByPhoneNumber(string phoneNumber)
+        public IActionResult GetByPhoneNumber(string phoneNumber)
         {
-            var account = await _accountService.GetAccountByPhoneNumber(phoneNumber);
+            var account = _accountService.GetByPhoneNumber(phoneNumber);
 
             if (account != null)
             {
@@ -77,7 +77,7 @@ namespace Skybot.Accounts.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var account = await _accountService.GeyById(id);
+            var account = await _accountService.Gey(id);
 
             if (account != null)
             {

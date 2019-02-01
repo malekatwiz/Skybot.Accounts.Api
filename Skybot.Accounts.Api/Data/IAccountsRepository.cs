@@ -2,10 +2,10 @@
 
 namespace Skybot.Accounts.Api.Data
 {
-    public interface IAccountsRepository
+    public interface IAccountsRepository : IRepository<UserAccount>
     {
-        Task<UserAccount> GetAccountByPhoneNumber(string phoneNumber);
+        UserAccount GetByPhoneNumber(string phoneNumber);
 
-        Task<UserAccount> CreateAccount(UserAccount account);
+        Task<UserAccount> Create(UserAccount account);
     }
 }

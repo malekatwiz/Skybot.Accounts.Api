@@ -22,7 +22,6 @@ namespace Skybot.Accounts.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<ISettings, Settings.Settings>();
-            services.AddTransient<IRepository, RepositoryBase>();
             services.AddTransient<IAccountsRepository, AccountsRepository>();
             services.AddTransient<IAccountService, AccountService>();
 

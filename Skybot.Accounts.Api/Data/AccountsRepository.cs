@@ -1,20 +1,21 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Skybot.Accounts.Api.Settings;
 
 namespace Skybot.Accounts.Api.Data
 {
-    public class AccountsRepository : RepositoryBase, IAccountsRepository
+    public class AccountsRepository : RepositoryBase<UserAccount>, IAccountsRepository
     {
-        public AccountsRepository(ISettings settings) : base(settings)
+        public AccountsRepository(ISettings settings) : base(settings, "Accounts")
         {
         }
 
-        public Task<UserAccount> GetAccountByPhoneNumber(string phoneNumber)
+        public UserAccount GetByPhoneNumber(string phoneNumber)
         {
-            return null;
+            return GetBy(x => x.PhoneNumber.Equals(phoneNumber, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public Task<UserAccount> CreateAccount(UserAccount account)
+        public Task<UserAccount> Create(UserAccount account)
         {
             return Add(account);
         }

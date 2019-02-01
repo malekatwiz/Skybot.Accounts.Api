@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Skybot.Accounts.Api.Data
 {
-    public interface IRepository
+    public interface IRepository<T>
     {
-        Task<UserAccount> Add(UserAccount account);
+        Task<T> Add(T document);
+        Task<T> Get(Guid id);
+        T GetBy(Func<T, bool> func);
     }
 }

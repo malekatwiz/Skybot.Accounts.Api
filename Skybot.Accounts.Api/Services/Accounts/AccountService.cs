@@ -14,19 +14,19 @@ namespace Skybot.Accounts.Api.Services.Accounts
             _accountRepository = accountRepository;
         }
 
-        public Task<UserAccount> GetAccountByPhoneNumber(string phoneNumber)
+        public UserAccount GetByPhoneNumber(string phoneNumber)
         {
-            throw new System.NotImplementedException();
+            return _accountRepository.GetByPhoneNumber(phoneNumber);
         }
 
-        public Task<UserAccount> GeyById(Guid id)
+        public Task<UserAccount> Gey(Guid id)
         {
-            throw new System.NotImplementedException();
+            return _accountRepository.Get(id);
         }
 
-        public Task<UserAccount> NewAccount(UserAccountModel model)
+        public Task<UserAccount> New(UserAccountModel model)
         {
-            return _accountRepository.CreateAccount(new UserAccount
+            return _accountRepository.Create(new UserAccount
             {
                 PhoneNumber = model.PhoneNumber
             });
