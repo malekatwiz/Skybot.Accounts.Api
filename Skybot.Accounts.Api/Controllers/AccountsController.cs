@@ -56,7 +56,7 @@ namespace Skybot.Accounts.Api.Controllers
             return BadRequest();
         }
 
-        [Route("account/{phoneNumber}")]
+        [Route("{phoneNumber}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet]
@@ -71,8 +71,9 @@ namespace Skybot.Accounts.Api.Controllers
             return NotFound();
         }
 
-        [Route("account/{id}")]
+        [Route("{id:Guid}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet]
         public async Task<IActionResult> GetById(Guid id)
         {
