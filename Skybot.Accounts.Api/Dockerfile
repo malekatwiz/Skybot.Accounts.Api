@@ -1,4 +1,7 @@
 FROM microsoft/dotnet:2.2-aspnetcore-runtime-stretch-slim AS base
+
+LABEL author="Malek Atwiz" email="hello@malekatwiz.net"
+
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443

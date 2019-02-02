@@ -28,7 +28,7 @@ namespace Skybot.Accounts.Api
             services.AddAuthentication("Bearer").AddIdentityServerAuthentication(options =>
             {
                 options.Authority = Configuration["Authority"];
-                options.ApiName = "Skybot.Api";
+                options.ApiName = "Skybot.Accounts.Api";
                 options.RequireHttpsMetadata = false;
             });
 

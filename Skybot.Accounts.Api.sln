@@ -1,11 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28516.95
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skybot.Accounts.Api", "Skybot.Accounts.Api\Skybot.Accounts.Api.csproj", "{6B00B4C1-E167-41D1-AA61-891C39305317}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skybot.Accounts.Api", "Skybot.Accounts.Api\Skybot.Accounts.Api.csproj", "{6B00B4C1-E167-41D1-AA61-891C39305317}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skybot.Accounts.Api.UnitTests", "Skybot.Accounts.Api.UnitTests\Skybot.Accounts.Api.UnitTests.csproj", "{F635DE87-CC10-4108-8035-F0E797FFC4A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skybot.Accounts.Api.UnitTests", "Skybot.Accounts.Api.UnitTests\Skybot.Accounts.Api.UnitTests.csproj", "{F635DE87-CC10-4108-8035-F0E797FFC4A0}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8DCE3D77-BF0F-4DC6-B592-15BC85A71588}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F60E720-0E72-4ECD-8FCD-67DAE619F602}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +28,10 @@ Global
 		{F635DE87-CC10-4108-8035-F0E797FFC4A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F635DE87-CC10-4108-8035-F0E797FFC4A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F635DE87-CC10-4108-8035-F0E797FFC4A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DCE3D77-BF0F-4DC6-B592-15BC85A71588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DCE3D77-BF0F-4DC6-B592-15BC85A71588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DCE3D77-BF0F-4DC6-B592-15BC85A71588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DCE3D77-BF0F-4DC6-B592-15BC85A71588}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

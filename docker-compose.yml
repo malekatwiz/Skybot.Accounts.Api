@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  skybot.accounts.api:
+    image: malekatwiz/skybot.accounts.api
+    build:
+      context: .
+      dockerfile: Skybot.Accounts.Api/Dockerfile
+    ports:
+      - "80"
+      - "443"
+    environment:
+      - SkybotDb__Uri
+      - SkybotDb__AuthKey
+      - Authority

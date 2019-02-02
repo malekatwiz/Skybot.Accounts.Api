@@ -260,3 +260,5 @@ paket-files/
 __pycache__/
 *.pyc
 /Skybot.Accounts.Api/appsettings.Development.json
+/.env
+/docker-compose.override.yml
