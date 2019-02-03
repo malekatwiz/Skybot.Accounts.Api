@@ -21,18 +21,18 @@ namespace Skybot.Accounts.Api.Controllers
             _accountService = accountService;
         }
 
-        [Route("check")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [Route("check/{phoneNumber}")]
+        [ProducesResponseType((int)HttpStatusCode.Found)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [HttpPost]
-        public IActionResult CheckAccount([FromBody]UserAccountModel model)
+        [HttpGet]
+        public IActionResult CheckAccount(string phoneNumber)
         {
-            if (ModelIsValid(model))
+            if (!string.IsNullOrEmpty(phoneNumber))
             {
-                var account = _accountService.GetByPhoneNumber(model.PhoneNumber);
+                var account = _accountService.GetByPhoneNumber(phoneNumber);
 
-                return account == null ? (IActionResult)NotFound() : Ok();
+                return account == null ? NotFound() : StatusCode((int) HttpStatusCode.Found);
             }
             return BadRequest();
         }
