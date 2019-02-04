@@ -26,10 +26,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
 
             var accountsController = new AccountsController(accountServiceMock.Object);
 
-            var result = accountsController.CheckAccount(new UserAccountModel
-            {
-                PhoneNumber = PhoneNumber
-            });
+            var result = accountsController.CheckAccount(PhoneNumber);
 
             var notFoundResult = result as NotFoundResult;
 
@@ -39,7 +36,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         }
 
         [TestMethod]
-        public async Task Check_ReturnsBadRequest_WhenModelIsEmpty()
+        public void Check_ReturnsBadRequest_WhenModelIsEmpty()
         {
             var accountServiceMock = new Mock<IAccountService>();
 
@@ -59,7 +56,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
 
             var accountsController = new AccountsController(accountServiceMock.Object);
 
-            var result = accountsController.CheckAccount(new UserAccountModel());
+            var result = accountsController.CheckAccount(string.Empty);
             var badRequestResult = result as BadRequestResult;
 
             Assert.IsNotNull(badRequestResult);
@@ -67,7 +64,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void Check_ReturnsOk_WhenPhoneNumberExists()
+        public void Check_ReturnsFoundStatusCode_WhenPhoneNumberExists()
         {
             var accountServiceMock = new Mock<IAccountService>();
             accountServiceMock.Setup(x => x.GetByPhoneNumber(PhoneNumber))
@@ -76,14 +73,13 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
 
             var accountsController = new AccountsController(accountServiceMock.Object);
 
-            var result = accountsController.CheckAccount(
-                new UserAccountModel { PhoneNumber = PhoneNumber });
-            var okResult = result as OkResult;
+            var result = accountsController.CheckAccount(PhoneNumber);
+            var statusCodeResult = result as StatusCodeResult;
 
             accountServiceMock.Verify(x => x.GetByPhoneNumber(PhoneNumber), Times.Exactly(1));
 
-            Assert.IsNotNull(okResult);
-            Assert.AreEqual(okResult.StatusCode, (int)HttpStatusCode.OK);
+            Assert.IsNotNull(statusCodeResult);
+            Assert.AreEqual(statusCodeResult.StatusCode, (int)HttpStatusCode.Found);
         }
 
         [TestMethod]
