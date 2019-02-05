@@ -173,13 +173,13 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var accountsController = new AccountsController(accountServiceMock.Object);
 
             var result = accountsController.GetByPhoneNumber(PhoneNumber);
-            var okObjectResult = result as OkObjectResult;
+            var objectResult = result as ObjectResult;
 
             accountServiceMock.Verify(x => x.GetByPhoneNumber(PhoneNumber), Times.Exactly(1));
 
-            Assert.IsNotNull(okObjectResult);
-            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
-            Assert.AreEqual(okObjectResult.Value, testAccount);
+            Assert.IsNotNull(objectResult);
+            Assert.AreEqual(objectResult.StatusCode, (int)HttpStatusCode.Found);
+            Assert.AreEqual(objectResult.Value, testAccount);
         }
 
         [TestMethod]

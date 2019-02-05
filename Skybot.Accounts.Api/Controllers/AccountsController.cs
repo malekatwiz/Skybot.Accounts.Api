@@ -57,7 +57,7 @@ namespace Skybot.Accounts.Api.Controllers
         }
 
         [Route("{phoneNumber}")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Found)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet]
         public IActionResult GetByPhoneNumber(string phoneNumber)
@@ -66,7 +66,7 @@ namespace Skybot.Accounts.Api.Controllers
 
             if (account != null)
             {
-                return Ok(account);
+                return new ObjectResult(account) {StatusCode = (int) HttpStatusCode.Found};
             }
             return NotFound();
         }
