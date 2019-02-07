@@ -19,7 +19,7 @@ namespace Skybot.Accounts.Api.Services.Accounts
             return _accountRepository.GetByPhoneNumber(phoneNumber);
         }
 
-        public Task<UserAccount> Gey(Guid id)
+        public Task<UserAccount> Get(Guid id)
         {
             return _accountRepository.Get(id);
         }
@@ -30,6 +30,35 @@ namespace Skybot.Accounts.Api.Services.Accounts
             {
                 PhoneNumber = model.PhoneNumber
             });
+        }
+
+        public async Task<string> GenerateCode(Guid id)
+        {
+            var userAccount = await Get(id);
+
+            if (userAccount != null)
+            {
+                userAccount.AccessCode = GenerateAccessCode(123456, 999999).ToString();
+                userAccount.AccessCodeExpiry = DateTime.Now.AddMinutes(30);
+
+                await _accountRepository.Update(userAccount);
+
+                return userAccount.AccessCode;
+            }
+
+            return string.Empty;
+        }
+
+        public bool ValidateToken(string phoneNumber, string accessCode)
+        {
+            var userAccount = GetByPhoneNumber(phoneNumber);
+            return accessCode.Equals(userAccount.AccessCode, StringComparison.InvariantCulture);
+        }
+
+        private static int GenerateAccessCode(int min, int max)
+        {
+            var random = new Random();
+            return random.Next(min, max);
         }
     }
 }

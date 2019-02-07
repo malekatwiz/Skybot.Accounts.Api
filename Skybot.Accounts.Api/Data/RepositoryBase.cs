@@ -43,5 +43,10 @@ namespace Skybot.Accounts.Api.Data
             return DocumentClient.CreateDocumentQuery<T>(CollectionUri)
                 .Where(func).AsEnumerable().FirstOrDefault();
         }
+
+        public async Task Update(T item)
+        {
+            await DocumentClient.UpsertDocumentAsync(CollectionUri, item);
+        }
     }
 }

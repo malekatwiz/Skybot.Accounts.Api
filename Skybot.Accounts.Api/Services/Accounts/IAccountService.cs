@@ -9,6 +9,8 @@ namespace Skybot.Accounts.Api.Services.Accounts
     {
         Task<UserAccount> New(UserAccountModel model);
         UserAccount GetByPhoneNumber(string phoneNumber);
-        Task<UserAccount> Gey(Guid id);
+        Task<UserAccount> Get(Guid id);
+        Task<string> GenerateCode(Guid id);
+        bool ValidateToken(string phoneNumber, string accessCode);
     }
 }

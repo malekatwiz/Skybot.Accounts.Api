@@ -77,7 +77,7 @@ namespace Skybot.Accounts.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var account = await _accountService.Gey(id);
+            var account = await _accountService.Get(id);
 
             if (account != null)
             {
@@ -85,6 +85,40 @@ namespace Skybot.Accounts.Api.Controllers
             }
 
             return NotFound();
+        }
+
+        [Route("generatetoken")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [HttpPost]
+        public async Task<IActionResult> GenerateToken([FromBody]VerificationCodeModel model)
+        {
+            var userAccount = _accountService.GetByPhoneNumber(model.PhoneNumber);
+            if (userAccount != null && !userAccount.Id.Equals(Guid.Empty))
+            {
+                var accessCode = await _accountService.GenerateCode(userAccount.Id);
+                if (!string.IsNullOrEmpty(accessCode))
+                {
+                    return Ok(accessCode);
+                }
+            }
+
+            return new NotFoundResult();
+        }
+
+
+        [Route("validatetoken")]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.NotAcceptable)]
+        [HttpPost]
+        public IActionResult ValidateToken([FromBody] VerificationCodeModel model)
+        {
+            if (_accountService.ValidateToken(model.PhoneNumber, model.Code))
+            {
+                return new AcceptedResult();
+            }
+
+            return new ObjectResult(HttpStatusCode.NotAcceptable);
         }
 
         private static bool ModelIsValid(UserAccountModel model)

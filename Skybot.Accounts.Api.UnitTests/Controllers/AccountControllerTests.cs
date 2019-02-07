@@ -186,7 +186,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         public async Task GetByPhoneNumber_ReturnsNotFound_WhenAccountDoesNotExist()
         {
             var accountServiceMock = new Mock<IAccountService>();
-            accountServiceMock.Setup(x => x.Gey(It.IsAny<Guid>()))
+            accountServiceMock.Setup(x => x.Get(It.IsAny<Guid>()))
                 .Returns(Task.FromResult((UserAccount) null))
                 .Verifiable();
 
@@ -195,7 +195,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var result = await accountsController.GetById(It.IsAny<Guid>());
             var notFoundResult = result as NotFoundResult;
 
-            accountServiceMock.Verify(x => x.Gey(It.IsAny<Guid>()), Times.Exactly(1));
+            accountServiceMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Exactly(1));
 
             Assert.IsNotNull(notFoundResult);
             Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
@@ -208,7 +208,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var testUserAccount = CreateTestAccount();
 
             var accountServiceMock = new Mock<IAccountService>();
-            accountServiceMock.Setup(x => x.Gey(id))
+            accountServiceMock.Setup(x => x.Get(id))
                 .Returns(Task.FromResult(testUserAccount))
                 .Verifiable();
 
@@ -217,7 +217,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var result = await accountsController.GetById(id);
             var okObjectResult = result as OkObjectResult;
 
-            accountServiceMock.Verify(x => x.Gey(id), Times.Exactly(1));
+            accountServiceMock.Verify(x => x.Get(id), Times.Exactly(1));
 
             Assert.IsNotNull(okObjectResult);
             Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
@@ -228,7 +228,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         public async Task GetById_ReturnsNotFound_WhenAccountDoesNotExist()
         {
             var accountServiceMock = new Mock<IAccountService>();
-            accountServiceMock.Setup(x => x.Gey(It.IsAny<Guid>()))
+            accountServiceMock.Setup(x => x.Get(It.IsAny<Guid>()))
                 .Returns(Task.FromResult((UserAccount)null))
                 .Verifiable();
 
@@ -237,7 +237,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var result = await accountsController.GetById(It.IsAny<Guid>());
             var notFoundResult = result as NotFoundResult;
 
-            accountServiceMock.Verify(x => x.Gey(It.IsAny<Guid>()), Times.Exactly(1));
+            accountServiceMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Exactly(1));
 
             Assert.IsNotNull(notFoundResult);
             Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
