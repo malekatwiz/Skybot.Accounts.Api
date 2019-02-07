@@ -118,7 +118,7 @@ namespace Skybot.Accounts.Api.Controllers
                 return new AcceptedResult();
             }
 
-            return new ObjectResult(HttpStatusCode.NotAcceptable);
+            return new ObjectResult(null){StatusCode = (int)HttpStatusCode.NotAcceptable };
         }
 
         private static bool ModelIsValid(UserAccountModel model)
