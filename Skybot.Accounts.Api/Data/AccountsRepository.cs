@@ -6,7 +6,7 @@ namespace Skybot.Accounts.Api.Data
 {
     public class AccountsRepository : RepositoryBase<UserAccount>, IAccountsRepository
     {
-        public AccountsRepository(ISettings settings) : base(settings, "Accounts", "/userid")
+        public AccountsRepository(ISettings settings) : base(settings, "Accounts")
         {
         }
 
@@ -17,7 +17,7 @@ namespace Skybot.Accounts.Api.Data
 
         public Task<UserAccount> Create(UserAccount account)
         {
-            return Add(account);
+            return AddAsync(account);
         }
 
         public override async Task UpdateAsync(UserAccount userAccount)

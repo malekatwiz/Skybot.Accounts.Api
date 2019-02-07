@@ -183,19 +183,19 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         }
 
         [TestMethod]
-        public async Task GetByPhoneNumber_ReturnsNotFound_WhenAccountDoesNotExist()
+        public void GetByPhoneNumber_ReturnsNotFound_WhenAccountDoesNotExist()
         {
             var accountServiceMock = new Mock<IAccountService>();
-            accountServiceMock.Setup(x => x.Get(It.IsAny<Guid>()))
-                .Returns(Task.FromResult((UserAccount) null))
+            accountServiceMock.Setup(x => x.GetByPhoneNumber(It.IsAny<string>()))
+                .Returns((UserAccount) null)
                 .Verifiable();
 
             var accountsController = new AccountsController(accountServiceMock.Object);
 
-            var result = await accountsController.GetById(It.IsAny<Guid>());
+            var result = accountsController.GetByPhoneNumber(It.IsAny<string>());
             var notFoundResult = result as NotFoundResult;
 
-            accountServiceMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Exactly(1));
+            accountServiceMock.Verify(x => x.GetByPhoneNumber(It.IsAny<string>()), Times.Exactly(1));
 
             Assert.IsNotNull(notFoundResult);
             Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
@@ -204,7 +204,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         [TestMethod]
         public async Task GetById_ReturnsAccount_WhenAccountIsFound()
         {
-            var id = Guid.NewGuid();
+            var id = Guid.NewGuid().ToString();
             var testUserAccount = CreateTestAccount();
 
             var accountServiceMock = new Mock<IAccountService>();
@@ -228,16 +228,16 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         public async Task GetById_ReturnsNotFound_WhenAccountDoesNotExist()
         {
             var accountServiceMock = new Mock<IAccountService>();
-            accountServiceMock.Setup(x => x.Get(It.IsAny<Guid>()))
+            accountServiceMock.Setup(x => x.Get(It.IsAny<string>()))
                 .Returns(Task.FromResult((UserAccount)null))
                 .Verifiable();
 
             var accountsController = new AccountsController(accountServiceMock.Object);
 
-            var result = await accountsController.GetById(It.IsAny<Guid>());
+            var result = await accountsController.GetById(It.IsAny<string>());
             var notFoundResult = result as NotFoundResult;
 
-            accountServiceMock.Verify(x => x.Get(It.IsAny<Guid>()), Times.Exactly(1));
+            accountServiceMock.Verify(x => x.Get(It.IsAny<string>()), Times.Exactly(1));
 
             Assert.IsNotNull(notFoundResult);
             Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
@@ -247,7 +247,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         {
             return new UserAccount
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 PhoneNumber = PhoneNumber
             };
         }

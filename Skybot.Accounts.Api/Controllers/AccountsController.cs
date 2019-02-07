@@ -47,7 +47,7 @@ namespace Skybot.Accounts.Api.Controllers
             {
                 var account = await _accountService.New(model);
 
-                if (account != null && !account.Id.Equals(Guid.Empty))
+                if (!string.IsNullOrEmpty(account?.Id))
                 {
                     //TODO: Change Uri
                     return new CreatedResult(new Uri($"https://accounts.skybot.io/api/accounts/{account.Id}"), account);
@@ -71,11 +71,11 @@ namespace Skybot.Accounts.Api.Controllers
             return NotFound();
         }
 
-        [Route("{id:Guid}")]
+        [Route("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById(string id)
         {
             var account = await _accountService.Get(id);
 
@@ -87,16 +87,16 @@ namespace Skybot.Accounts.Api.Controllers
             return NotFound();
         }
 
-        [Route("generatetoken")]
+        [Route("GenerateAccessCode")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpPost]
-        public async Task<IActionResult> GenerateToken([FromBody]VerificationCodeModel model)
+        public async Task<IActionResult> GenerateAccessCode([FromBody]VerificationCodeModel model)
         {
             var userAccount = _accountService.GetByPhoneNumber(model.PhoneNumber);
-            if (userAccount != null && !userAccount.Id.Equals(Guid.Empty))
+            if (!string.IsNullOrEmpty(userAccount?.Id))
             {
-                var accessCode = await _accountService.GenerateCode(userAccount.PhoneNumber);
+                var accessCode = await _accountService.GenerateAccessCode(userAccount.Id);
                 if (!string.IsNullOrEmpty(accessCode))
                 {
                     return Ok(accessCode);
@@ -107,13 +107,13 @@ namespace Skybot.Accounts.Api.Controllers
         }
 
 
-        [Route("validatetoken")]
+        [Route("ValidateAccessCode")]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.NotAcceptable)]
         [HttpPost]
-        public IActionResult ValidateToken([FromBody] VerificationCodeModel model)
+        public IActionResult ValidateAccessCode([FromBody] VerificationCodeModel model)
         {
-            if (_accountService.ValidateToken(model.PhoneNumber, model.Code))
+            if (_accountService.ValidateAccessCode(model.PhoneNumber, model.Code))
             {
                 return new AcceptedResult();
             }
