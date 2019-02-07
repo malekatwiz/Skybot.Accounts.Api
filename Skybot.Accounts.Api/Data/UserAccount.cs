@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Azure.Documents;
 
 namespace Skybot.Accounts.Api.Data
 {
@@ -7,6 +6,7 @@ namespace Skybot.Accounts.Api.Data
     {
         public Guid Id { get; set; }
         public string PhoneNumber { get; set; }
+        public string Name { get; set; }
         public string AccessCode { get; set; }
         public DateTime AccessCodeExpiry { get; set; }
     }

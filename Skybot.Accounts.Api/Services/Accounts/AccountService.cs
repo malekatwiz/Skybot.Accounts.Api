@@ -28,7 +28,8 @@ namespace Skybot.Accounts.Api.Services.Accounts
         {
             return _accountRepository.Create(new UserAccount
             {
-                PhoneNumber = model.PhoneNumber
+                PhoneNumber = model.PhoneNumber,
+                Name = model.Name
             });
         }
 
