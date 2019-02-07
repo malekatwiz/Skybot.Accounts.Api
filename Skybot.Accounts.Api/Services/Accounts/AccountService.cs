@@ -33,16 +33,16 @@ namespace Skybot.Accounts.Api.Services.Accounts
             });
         }
 
-        public async Task<string> GenerateCode(Guid id)
+        public async Task<string> GenerateCode(string phoneNumber)
         {
-            var userAccount = await Get(id);
+            var userAccount = GetByPhoneNumber(phoneNumber);
 
             if (userAccount != null)
             {
                 userAccount.AccessCode = GenerateAccessCode(123456, 999999).ToString();
                 userAccount.AccessCodeExpiry = DateTime.Now.AddMinutes(30);
 
-                await _accountRepository.Update(userAccount);
+                await _accountRepository.UpdateAsync(userAccount);
 
                 return userAccount.AccessCode;
             }

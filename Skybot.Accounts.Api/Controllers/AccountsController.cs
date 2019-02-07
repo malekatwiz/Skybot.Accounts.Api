@@ -96,7 +96,7 @@ namespace Skybot.Accounts.Api.Controllers
             var userAccount = _accountService.GetByPhoneNumber(model.PhoneNumber);
             if (userAccount != null && !userAccount.Id.Equals(Guid.Empty))
             {
-                var accessCode = await _accountService.GenerateCode(userAccount.Id);
+                var accessCode = await _accountService.GenerateCode(userAccount.PhoneNumber);
                 if (!string.IsNullOrEmpty(accessCode))
                 {
                     return Ok(accessCode);

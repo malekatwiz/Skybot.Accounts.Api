@@ -8,6 +8,6 @@ namespace Skybot.Accounts.Api.Data
         Task<T> Add(T document);
         Task<T> Get(Guid id);
         T GetBy(Func<T, bool> func);
-        Task Update(T item);
+        Task UpdateAsync(T item);
     }
 }

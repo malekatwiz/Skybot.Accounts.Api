@@ -13,11 +13,13 @@ namespace Skybot.Accounts.Api.Data
 
         private readonly string _skybotDatabaseId;
         private readonly string _collectionId;
+        private readonly string _partitionKey;
 
-        public RepositoryBase(ISettings settings, string collectionId)
+        public RepositoryBase(ISettings settings, string collectionId, string partitionKey)
         {
             _skybotDatabaseId = settings.SkybotDbId;
             _collectionId = collectionId;
+            _partitionKey = partitionKey;
 
             DocumentClient = new DocumentClient(settings.SkybotDbEndpoint, settings.SkybotDbAuthKey);
             CollectionUri = UriFactory.CreateDocumentCollectionUri(settings.SkybotDbId, _collectionId);
@@ -30,8 +32,9 @@ namespace Skybot.Accounts.Api.Data
             return (dynamic)savedDocument.Resource;
         }
 
-        public async Task<T> Get(Guid id)
+        public virtual async Task<T> Get(Guid id)
         {
+            //TODO: Fix error here.
             var document = await DocumentClient.ReadDocumentAsync<T>(UriFactory.CreateDocumentUri(_skybotDatabaseId,
                     _collectionId, id.ToString()));
 
@@ -44,7 +47,7 @@ namespace Skybot.Accounts.Api.Data
                 .Where(func).AsEnumerable().FirstOrDefault();
         }
 
-        public async Task Update(T item)
+        public virtual async Task UpdateAsync(T item)
         {
             await DocumentClient.UpsertDocumentAsync(CollectionUri, item);
         }
