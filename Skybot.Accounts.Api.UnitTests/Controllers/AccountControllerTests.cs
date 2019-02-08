@@ -215,12 +215,12 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var accountsController = new AccountsController(accountServiceMock.Object);
 
             var result = await accountsController.GetById(id);
-            var okObjectResult = result as OkObjectResult;
+            var okObjectResult = result as ObjectResult;
 
             accountServiceMock.Verify(x => x.Get(id), Times.Exactly(1));
 
             Assert.IsNotNull(okObjectResult);
-            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.OK);
+            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.Found);
             Assert.AreEqual(okObjectResult.Value, testUserAccount);
         }
 
