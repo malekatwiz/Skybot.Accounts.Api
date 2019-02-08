@@ -71,8 +71,8 @@ namespace Skybot.Accounts.Api.Controllers
             return NotFound();
         }
 
-        [Route("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [Route("{id}/details")]
+        [ProducesResponseType((int)HttpStatusCode.Found)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet]
         public async Task<IActionResult> GetById(string id)
@@ -81,7 +81,7 @@ namespace Skybot.Accounts.Api.Controllers
 
             if (account != null)
             {
-                return Ok(account);
+                return new ObjectResult(account) { StatusCode = (int)HttpStatusCode.Found };
             }
 
             return NotFound();
