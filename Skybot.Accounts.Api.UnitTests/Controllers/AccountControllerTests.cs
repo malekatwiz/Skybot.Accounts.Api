@@ -8,6 +8,7 @@ using Skybot.Accounts.Api.Services.Accounts;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Skybot.Accounts.Api.UnitTests.Controllers
 {
@@ -17,7 +18,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         const string PhoneNumber = "10001112222";
 
         [TestMethod]
-        public void Check_ReturnsNotFound_WhenPhoneNumberDoesNotExist()
+        public void Check_ReturnsNoSuccess_WhenPhoneNumberDoesNotExist()
         {
             var accountServiceMock = new Mock<IAccountService>();
             accountServiceMock.Setup(x => x.GetByPhoneNumber(It.IsAny<string>()))
@@ -28,11 +29,12 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
 
             var result = accountsController.CheckAccount(PhoneNumber);
 
-            var notFoundResult = result as NotFoundResult;
+            var response = result as OkObjectResult;
 
             accountServiceMock.Verify(x => x.GetByPhoneNumber(It.IsAny<string>()), Times.Exactly(1));
-            Assert.IsNotNull(notFoundResult);
-            Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.StatusCode, (int)HttpStatusCode.OK);
+            Assert.IsFalse(((HttpBaseResponse)response.Value).Success);
         }
 
         [TestMethod]
@@ -64,7 +66,7 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void Check_ReturnsFoundStatusCode_WhenPhoneNumberExists()
+        public void Check_ReturnsSuccessStatus_WhenPhoneNumberExists()
         {
             var accountServiceMock = new Mock<IAccountService>();
             accountServiceMock.Setup(x => x.GetByPhoneNumber(PhoneNumber))
@@ -74,12 +76,13 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var accountsController = new AccountsController(accountServiceMock.Object);
 
             var result = accountsController.CheckAccount(PhoneNumber);
-            var statusCodeResult = result as StatusCodeResult;
+            var response = result as OkObjectResult;
 
             accountServiceMock.Verify(x => x.GetByPhoneNumber(PhoneNumber), Times.Exactly(1));
 
-            Assert.IsNotNull(statusCodeResult);
-            Assert.AreEqual(statusCodeResult.StatusCode, (int)HttpStatusCode.Found);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.StatusCode, (int)HttpStatusCode.OK);
+            Assert.IsTrue(((HttpBaseResponse)response.Value).Success);
         }
 
         [TestMethod]
@@ -173,17 +176,19 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var accountsController = new AccountsController(accountServiceMock.Object);
 
             var result = accountsController.GetByPhoneNumber(PhoneNumber);
-            var objectResult = result as ObjectResult;
+            var response = result as OkObjectResult;
+            var returnedAccount = ((HttpBaseResponse) response.Value).Object;
 
             accountServiceMock.Verify(x => x.GetByPhoneNumber(PhoneNumber), Times.Exactly(1));
 
-            Assert.IsNotNull(objectResult);
-            Assert.AreEqual(objectResult.StatusCode, (int)HttpStatusCode.Found);
-            Assert.AreEqual(objectResult.Value, testAccount);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.StatusCode, (int)HttpStatusCode.OK);
+            Assert.IsTrue(((HttpBaseResponse)response.Value).Success);
+            Assert.AreEqual(returnedAccount, testAccount.ToString());
         }
 
         [TestMethod]
-        public void GetByPhoneNumber_ReturnsNotFound_WhenAccountDoesNotExist()
+        public void GetByPhoneNumber_ReturnsNoSuccessStatus_WhenAccountDoesNotExist()
         {
             var accountServiceMock = new Mock<IAccountService>();
             accountServiceMock.Setup(x => x.GetByPhoneNumber(It.IsAny<string>()))
@@ -193,12 +198,13 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var accountsController = new AccountsController(accountServiceMock.Object);
 
             var result = accountsController.GetByPhoneNumber(It.IsAny<string>());
-            var notFoundResult = result as NotFoundResult;
+            var response = result as OkObjectResult;
 
             accountServiceMock.Verify(x => x.GetByPhoneNumber(It.IsAny<string>()), Times.Exactly(1));
 
-            Assert.IsNotNull(notFoundResult);
-            Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.StatusCode, (int)HttpStatusCode.OK);
+            Assert.IsFalse(((HttpBaseResponse)response.Value).Success);
         }
 
         [TestMethod]
@@ -215,17 +221,18 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var accountsController = new AccountsController(accountServiceMock.Object);
 
             var result = await accountsController.GetById(id);
-            var okObjectResult = result as ObjectResult;
+            var response = result as OkObjectResult;
+            var returnedAccount = ((HttpBaseResponse) response.Value).Object;
 
             accountServiceMock.Verify(x => x.Get(id), Times.Exactly(1));
 
-            Assert.IsNotNull(okObjectResult);
-            Assert.AreEqual(okObjectResult.StatusCode, (int)HttpStatusCode.Found);
-            Assert.AreEqual(okObjectResult.Value, testUserAccount);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.StatusCode, (int)HttpStatusCode.OK);
+            Assert.AreEqual(returnedAccount, testUserAccount.ToString());
         }
 
         [TestMethod]
-        public async Task GetById_ReturnsNotFound_WhenAccountDoesNotExist()
+        public async Task GetById_ReturnsNoSuccessStatus_WhenAccountDoesNotExist()
         {
             var accountServiceMock = new Mock<IAccountService>();
             accountServiceMock.Setup(x => x.Get(It.IsAny<string>()))
@@ -235,12 +242,13 @@ namespace Skybot.Accounts.Api.UnitTests.Controllers
             var accountsController = new AccountsController(accountServiceMock.Object);
 
             var result = await accountsController.GetById(It.IsAny<string>());
-            var notFoundResult = result as NotFoundResult;
+            var response = result as OkObjectResult;
 
             accountServiceMock.Verify(x => x.Get(It.IsAny<string>()), Times.Exactly(1));
 
-            Assert.IsNotNull(notFoundResult);
-            Assert.AreEqual(notFoundResult.StatusCode, (int)HttpStatusCode.NotFound);
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.StatusCode, (int)HttpStatusCode.OK);
+            Assert.IsFalse(((HttpBaseResponse)response.Value).Success);
         }
 
         private UserAccount CreateTestAccount()

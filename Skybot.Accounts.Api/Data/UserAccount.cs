@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 namespace Skybot.Accounts.Api.Data
 {
+    [Serializable]
     public class UserAccount
     {
         [JsonProperty(PropertyName = "id")]
