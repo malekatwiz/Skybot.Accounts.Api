@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Skybot.Accounts.Api.Models;
 using Skybot.Accounts.Api.Services.Accounts;
 
@@ -22,9 +23,8 @@ namespace Skybot.Accounts.Api.Controllers
         }
 
         [Route("check/{phoneNumber}")]
-        [ProducesResponseType((int)HttpStatusCode.Found)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet]
         public IActionResult CheckAccount(string phoneNumber)
         {
@@ -32,7 +32,10 @@ namespace Skybot.Accounts.Api.Controllers
             {
                 var account = _accountService.GetByPhoneNumber(phoneNumber);
 
-                return account == null ? NotFound() : StatusCode((int) HttpStatusCode.Found);
+                return Ok(new HttpBaseResponse
+                {
+                    Success = account != null
+                });
             }
             return BadRequest();
         }
@@ -57,68 +60,83 @@ namespace Skybot.Accounts.Api.Controllers
         }
 
         [Route("{phoneNumber}")]
-        [ProducesResponseType((int)HttpStatusCode.Found)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpGet]
         public IActionResult GetByPhoneNumber(string phoneNumber)
         {
             var account = _accountService.GetByPhoneNumber(phoneNumber);
 
+            var response = new HttpBaseResponse
+            {
+                Success = false
+            };
             if (account != null)
             {
-                return new ObjectResult(account) {StatusCode = (int) HttpStatusCode.Found};
+                response.Success = true;
+                response.Object = JsonConvert.SerializeObject(account);
             }
-            return NotFound();
+
+            return Ok(response);
         }
 
         [Route("{id}/details")]
-        [ProducesResponseType((int)HttpStatusCode.Found)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpGet]
         public async Task<IActionResult> GetById(string id)
         {
             var account = await _accountService.Get(id);
-
+            var response = new HttpBaseResponse
+            {
+                Success = false
+            };
             if (account != null)
             {
-                return new ObjectResult(account) { StatusCode = (int)HttpStatusCode.Found };
+                response.Success = true;
+                response.Object = JsonConvert.SerializeObject(account);
             }
 
-            return NotFound();
+            return Ok(response);
         }
 
         [Route("GenerateAccessCode")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpPost]
         public async Task<IActionResult> GenerateAccessCode([FromBody]VerificationCodeModel model)
         {
             var userAccount = _accountService.GetByPhoneNumber(model.PhoneNumber);
+            var response = new HttpBaseResponse
+            {
+                Success = false
+            };
             if (!string.IsNullOrEmpty(userAccount?.Id))
             {
                 var accessCode = await _accountService.GenerateAccessCode(userAccount.Id);
                 if (!string.IsNullOrEmpty(accessCode))
                 {
-                    return Ok(accessCode);
+                    response.Success = true;
+                    response.Object = JsonConvert.SerializeObject(accessCode);
                 }
             }
 
-            return new NotFoundResult();
+            return Ok(response);
         }
 
 
         [Route("ValidateAccessCode")]
-        [ProducesResponseType((int)HttpStatusCode.Accepted)]
-        [ProducesResponseType((int)HttpStatusCode.NotAcceptable)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [HttpPost]
         public IActionResult ValidateAccessCode([FromBody] VerificationCodeModel model)
         {
+            var response = new HttpBaseResponse
+            {
+                Success = false
+            };
             if (_accountService.ValidateAccessCode(model.PhoneNumber, model.Code))
             {
-                return new AcceptedResult();
+                response.Success = true;
             }
 
-            return new ObjectResult(null){StatusCode = (int)HttpStatusCode.NotAcceptable };
+            return Ok(response);
         }
 
         private static bool ModelIsValid(UserAccountModel model)
